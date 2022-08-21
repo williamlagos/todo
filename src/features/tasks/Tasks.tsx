@@ -3,22 +3,19 @@ import { Box, Button, TextInput, Heading, CheckBox, Paragraph, Tag } from 'gromm
 import { Checkmark, Add } from 'grommet-icons';
 
 import { AppBar } from '../../components/AppBar';
-import { useAppDispatch } from '../../app/hooks';
-/* import {
-  incrementAsync,
-} from './tasksSlice'; */
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Task } from './tasksSlice';
+import {
+  addTask,
+  toggleTask,
+} from './tasksSlice';
 
 
 
 export const Tasks = () => {
   const dispatch = useAppDispatch();
-  const [tasks, setTasks] = useState([
-    { id: 1, name: 'Task 1', done: false },
-    { id: 2, name: 'Task 2', done: false },
-    { id: 3, name: 'Task 3', done: false },
-    { id: 4, name: 'Task 4', done: true },
-    { id: 5, name: 'Task 5', done: true },
-  ]);
+  const initialTasks = useAppSelector(state => state.tasks.tasks);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [newTask, setNewTask] = useState("");
   const [toggleButton, setToggleButton] = useState(true);
   return (
