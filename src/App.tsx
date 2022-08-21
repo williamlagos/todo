@@ -1,13 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Grommet } from 'grommet';
 import { Counter } from './features/counter/Counter';
-import './App.css';
+
+const theme = {
+  global: {
+    font: {
+      family: 'Roboto',
+      size: '18px',
+      height: '20px',
+    },
+  },
+};
 
 function App() {
   return (
-    <div className="App">
+    <Grommet theme={theme}>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <Counter />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
@@ -51,7 +59,7 @@ function App() {
           </a>
         </span>
       </header>
-    </div>
+    </Grommet>
   );
 }
 
