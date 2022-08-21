@@ -1,9 +1,14 @@
 import React from 'react';
-import { Grommet } from 'grommet';
+import { Box, Button, Heading, Grommet } from 'grommet';
+import { Notification } from 'grommet-icons';
+
 import { Counter } from './features/counter/Counter';
 
 const theme = {
   global: {
+    colors: {
+      brand: '#228B00',
+    },
     font: {
       family: 'Roboto',
       size: '18px',
@@ -12,53 +17,34 @@ const theme = {
   },
 };
 
-function App() {
+const AppBar = (props: any) => (
+  <Box
+    tag="header"
+    direction="row"
+    align="center"
+    justify="between"
+    background="brand"
+    pad={{ left: "medium", right: "small", vertical: "small" }}
+    elevation="medium"
+    style={{ zIndex: "1" }}
+    {...props}
+  />
+);
+
+const App = () => {
   return (
-    <Grommet theme={theme}>
-      <header className="App-header">
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <Grommet theme={theme} full>
+      <Box fill>
+        <AppBar>
+          <Heading level="3" margin="none"> My App </Heading>
+          <Button icon={<Notification />} onClick={() => {}}/>
+        </AppBar>
+        <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
+          <Box flex align='center' justify='center'>
+            <Counter />
+          </Box>
+        </Box>
+      </Box>
     </Grommet>
   );
 }
