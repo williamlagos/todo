@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
-import { fetchCount } from './tasksAPI';
+import { changeTask, createTask, getTasks } from './tasksAPI';
 
 export interface Task {
   id: number;
@@ -32,18 +32,26 @@ const initialState: TasksState = {
 export const addTask = createAsyncThunk(
   'tasks/add',
   async (amount: number) => {
-    const response = await fetchCount(amount);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    await createTask({
+      id: 1, name: 'Task 1', done: false
+    });
+    return;
+  }
+);
+
+export const listTasks = createAsyncThunk(
+  'tasks/list',
+  async () => {
+    const response = await getTasks();
+    return response;
   }
 );
 
 export const toggleTask = createAsyncThunk(
-  'tasks/remove',
+  'tasks/toggle',
   async (amount: number) => {
-    const response = await fetchCount(amount);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    await changeTask(0, false);
+    return;
   }
 );
 
@@ -64,6 +72,17 @@ export const tasksSlice = createSlice({
         state.tasks = [];
       })
       .addCase(addTask.rejected, (state) => {
+        state.status = 'failed';
+      });
+    builder
+      .addCase(listTasks.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(listTasks.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.tasks = action.payload;
+      })
+      .addCase(listTasks.rejected, (state) => {
         state.status = 'failed';
       });
     builder

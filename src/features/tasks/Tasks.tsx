@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, TextInput, Heading, CheckBox, Paragraph, Tag } from 'grommet';
 import { Checkmark, Add } from 'grommet-icons';
 
@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Task } from './tasksSlice';
 import {
   addTask,
+  listTasks,
   toggleTask,
 } from './tasksSlice';
 
@@ -18,6 +19,12 @@ export const Tasks = () => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [newTask, setNewTask] = useState("");
   const [toggleButton, setToggleButton] = useState(true);
+
+  useEffect(() => {
+    dispatch(listTasks());
+    setTasks(initialTasks);
+  }, [dispatch, initialTasks]);
+
   return (
     <Box>
       <AppBar>
@@ -32,7 +39,6 @@ export const Tasks = () => {
         </AppBar>
         <Box direction='column' pad="medium" flex overflow={{ horizontal: 'hidden' }}>
           <Box flex justify="start">
-            {/*<Counter />*/}
             {tasks.filter(task => !task.done).map((task: any) => (
               <Box key={task.id} gap="medium" direction="row">
                 <CheckBox 
