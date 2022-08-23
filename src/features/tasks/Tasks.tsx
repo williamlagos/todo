@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, TextInput, Heading, CheckBox, Paragraph, Tag, Spinner } from 'grommet';
-import { Checkmark, Add } from 'grommet-icons';
+import React, { useEffect, useState } from "react";
+import { Box, Button, TextInput, Heading, CheckBox, Paragraph, Tag, Spinner } from "grommet";
+import { Checkmark, Add } from "grommet-icons";
 
-import { AppBar } from '../../components/AppBar';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { AppBar } from "../../components/AppBar";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   addTask,
   listTasks,
   toggleTask,
   emptyTaskName,
   setTaskName,
-} from './tasksSlice';
+} from "./tasksSlice";
 
 export const Tasks = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ export const Tasks = () => {
           <Spinner size="large"/>
         </Box>
       ) : (
-        <Box direction="column" pad="medium" flex overflow={{ vertical: "scroll", horizontal: "hidden" }}>
+        <Box direction="column" flex overflow={{ vertical: "scroll", horizontal: "hidden" }}>
           <Box justify="start" pad="small" flex="grow">
             {!toggleButton && (
               <Box gap="medium" align="small" basis="small" direction="row">
@@ -63,7 +63,7 @@ export const Tasks = () => {
               </Box>
             ))}
           </Box>
-          <Box flex="shrink" justify="start">
+          <Box justify="start" pad="small" flex="shrink">
             <Tag name="Completed" value="Tasks" />
             {tasks.filter(task => task.done).map((task: any) => (
               <Box key={task.id} gap="medium" direction="row">

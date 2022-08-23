@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, /*AppThunk*/ } from '../../app/store';
-import { changeTask, createTask, getTasks } from './tasksAPI';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState, /*AppThunk*/ } from "../../app/store";
+import { changeTask, createTask, getTasks } from "./tasksAPI";
 
 export interface Task {
   id: number;
@@ -11,7 +11,7 @@ export interface Task {
 export interface TasksState {
   tasks: Task[];
   newTaskName: string;
-  status: 'idle' | 'loading' | 'failed';
+  status: "idle" | "loading" | "failed";
 }
 
 const initialState: TasksState = {
@@ -26,7 +26,7 @@ const initialState: TasksState = {
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
 export const addTask = createAsyncThunk(
-  'tasks/add',
+  "tasks/add",
   async (task: Task) => {
     await createTask(task);
     return;
@@ -34,7 +34,7 @@ export const addTask = createAsyncThunk(
 );
 
 export const listTasks = createAsyncThunk(
-  'tasks/list',
+  "tasks/list",
   async () => {
     const response = await getTasks();
     return response;
@@ -42,7 +42,7 @@ export const listTasks = createAsyncThunk(
 );
 
 export const toggleTask = createAsyncThunk(
-  'tasks/toggle',
+  "tasks/toggle",
   async (task: Task) => {
     await changeTask(task.id, task.done);
     return task;
@@ -50,7 +50,7 @@ export const toggleTask = createAsyncThunk(
 );
 
 export const tasksSlice = createSlice({
-  name: 'tasks',
+  name: "tasks",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
@@ -66,37 +66,37 @@ export const tasksSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addTask.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(addTask.fulfilled, (state, action) => {
-        state.status = 'idle';
+        state.status = "idle";
         // state.tasks = [...tasks.slice(0, -1), {id: tasks.length, name: newTask, done: false}];
       })
       .addCase(addTask.rejected, (state) => {
-        state.status = 'failed';
+        state.status = "failed";
       });
     builder
       .addCase(listTasks.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(listTasks.fulfilled, (state, action) => {
-        state.status = 'idle';
+        state.status = "idle";
         state.tasks = action.payload;
       })
       .addCase(listTasks.rejected, (state) => {
-        state.status = 'failed';
+        state.status = "failed";
       });
     builder
       .addCase(toggleTask.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(toggleTask.fulfilled, (state, action) => {
         console.log(action)
-        state.status = 'idle';
+        state.status = "idle";
         // state.tasks = state.tasks.map(t => (t.id === action.payload.id ? {...t, done: action.payload.done} : t));
       })
       .addCase(toggleTask.rejected, (state) => {
-        state.status = 'failed';
+        state.status = "failed";
       });
   },
 });
@@ -104,7 +104,7 @@ export const tasksSlice = createSlice({
 export const { emptyTaskName, setTaskName } = tasksSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
+// the state. Selectors can also be defined inline where they"re used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.tasks.value)`
 export const selectCount = (state: RootState) => state.tasks.tasks;
 
