@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextInput, Heading, CheckBox, Paragraph, Tag } from 'grommet';
+import { Box, Button, TextInput, Heading, CheckBox, Paragraph, Tag, Spinner } from 'grommet';
 import { Checkmark, Add } from 'grommet-icons';
 
 import { AppBar } from '../../components/AppBar';
@@ -15,6 +15,7 @@ import {
 export const Tasks = () => {
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(state => state.tasks.tasks);
+  const status = useAppSelector(state => state.tasks.status);
   const newTaskName = useAppSelector(state => state.tasks.newTaskName);
   const [toggleButton, setToggleButton] = useState(true);
 
@@ -23,23 +24,28 @@ export const Tasks = () => {
   }, [dispatch]);
 
   return (
-    <Box>
+    <>
       <AppBar>
-          <Heading level="3" margin="none"> ToDo App </Heading>
-          {toggleButton ? (
-            <Button icon={<Add />} onClick={() => setToggleButton(!toggleButton)} />
-          ) : (
-            <Button icon={<Checkmark />} onClick={() => {
-              dispatch(addTask({id: tasks.length, name: newTaskName, done: false}));
-              dispatch(emptyTaskName());
-              setToggleButton(!toggleButton);
-            }} />
-          )} 
-        </AppBar>
-        <Box direction='column' pad="medium" flex overflow={{ horizontal: 'hidden' }}>
-          <Box flex justify="start">
+        <Heading level="3" margin="none"> ToDo App </Heading>
+        {toggleButton ? (
+          <Button icon={<Add />} onClick={() => setToggleButton(!toggleButton)} />
+        ) : (
+          <Button icon={<Checkmark />} onClick={() => {
+            dispatch(addTask({id: tasks.length, name: newTaskName, done: false}));
+            dispatch(emptyTaskName());
+            setToggleButton(!toggleButton);
+          }} />
+        )} 
+      </AppBar>
+      { status === "loading" ? (
+        <Box align="center" basis="full" justify="center">
+          <Spinner size="large"/>
+        </Box>
+      ) : (
+        <Box direction="column" pad="medium" flex overflow={{ vertical: "scroll", horizontal: "hidden" }}>
+          <Box justify="start" pad="small" flex="grow">
             {!toggleButton && (
-              <Box gap="medium" direction="row">
+              <Box gap="medium" align="small" basis="small" direction="row">
                 <CheckBox />
                 <TextInput 
                   placeholder="Type the new task" 
@@ -48,16 +54,16 @@ export const Tasks = () => {
               </Box>
             )}
             {tasks.filter(task => !task.done).map((task: any) => (
-              <Box key={task.id} gap="medium" direction="row">
+              <Box key={task.id} gap="medium" align="center" pad="small" direction="row">
                 <CheckBox 
                   checked={task.done}
                   onChange={() => dispatch(toggleTask({ ...task, done: !task.done }))}
                 />
-                <Paragraph>{task.name}</Paragraph>
+                <Paragraph margin="none">{task.name}</Paragraph>
               </Box>
             ))}
           </Box>
-          <Box flex justify="start">
+          <Box flex="shrink" justify="start">
             <Tag name="Completed" value="Tasks" />
             {tasks.filter(task => task.done).map((task: any) => (
               <Box key={task.id} gap="medium" direction="row">
@@ -65,11 +71,12 @@ export const Tasks = () => {
                   checked={task.done}
                   onChange={() => dispatch(toggleTask({ ...task, done: !task.done }))}
                 />
-                <Paragraph>{task.name}</Paragraph>
+                <Paragraph margin="none">{task.name}</Paragraph>
               </Box>
             ))}
           </Box>
         </Box>
-    </Box>
+      )}
+    </>
   );
 }
