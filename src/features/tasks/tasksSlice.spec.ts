@@ -11,11 +11,13 @@ describe('counter reducer', () => {
       { id: 4, name: 'Task 4', done: true },
       { id: 5, name: 'Task 5', done: true } 
     ],
+    newTaskName: "",
     status: 'idle',
   };
   it('should handle initial state', () => {
     expect(counterReducer(undefined, { type: 'unknown' })).toEqual({
       tasks: [],
+      newTaskName: "",
       status: 'idle',
     });
   });

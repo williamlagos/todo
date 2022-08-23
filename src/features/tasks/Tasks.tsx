@@ -4,64 +4,56 @@ import { Checkmark, Add } from 'grommet-icons';
 
 import { AppBar } from '../../components/AppBar';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Task } from './tasksSlice';
 import {
   addTask,
   listTasks,
   toggleTask,
+  emptyTaskName,
+  setTaskName,
 } from './tasksSlice';
-
-
 
 export const Tasks = () => {
   const dispatch = useAppDispatch();
-  const initialTasks = useAppSelector(state => state.tasks.tasks);
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [newTask, setNewTask] = useState("");
+  const tasks = useAppSelector(state => state.tasks.tasks);
+  const newTaskName = useAppSelector(state => state.tasks.newTaskName);
   const [toggleButton, setToggleButton] = useState(true);
 
   useEffect(() => {
     dispatch(listTasks());
-    setTasks(initialTasks);
-  }, [dispatch, initialTasks]);
+  }, [dispatch]);
 
   return (
     <Box>
       <AppBar>
           <Heading level="3" margin="none"> ToDo App </Heading>
-          <Button icon={toggleButton ? <Add /> : <Checkmark />} onClick={() => {
-            setTasks(toggleButton && tasks.slice(-1)[0].name.length > 0 ? 
-              [...tasks, {id: tasks.length + 1, name: "", done: false}] : 
-              [...tasks.slice(0, -1), {id: tasks.length, name: newTask, done: false}]);
-            setToggleButton(!toggleButton);
-            setNewTask(newTask.length > 0 ? "" : newTask);
-          }}/>
+          {toggleButton ? (
+            <Button icon={<Add />} onClick={() => setToggleButton(!toggleButton)} />
+          ) : (
+            <Button icon={<Checkmark />} onClick={() => {
+              dispatch(addTask({id: tasks.length, name: newTaskName, done: false}));
+              dispatch(emptyTaskName());
+              setToggleButton(!toggleButton);
+            }} />
+          )} 
         </AppBar>
         <Box direction='column' pad="medium" flex overflow={{ horizontal: 'hidden' }}>
           <Box flex justify="start">
+            {!toggleButton && (
+              <Box gap="medium" direction="row">
+                <CheckBox />
+                <TextInput 
+                  placeholder="Type the new task" 
+                  onChange={(event: any) => dispatch(setTaskName(event.target.value))}
+                />
+              </Box>
+            )}
             {tasks.filter(task => !task.done).map((task: any) => (
               <Box key={task.id} gap="medium" direction="row">
                 <CheckBox 
                   checked={task.done}
-                  onChange={(event: any) => {
-                    setTasks(tasks.map(t => (t.id === task.id ? {...t, done: event.target.checked} : t)));
-                  }}
+                  onChange={() => dispatch(toggleTask({ ...task, done: !task.done }))}
                 />
-                {task.name.length > 0 ? (
-                  <Paragraph
-                    onClick={(event: any) => {
-                      setTasks(tasks.map(t => (t.id === task.id ? {...t, name: ""} : t)));
-                      setToggleButton(!toggleButton);
-                    }}
-                  >
-                    {task.name}
-                  </Paragraph>
-                  ) : (
-                  <TextInput 
-                    placeholder="Type the new task" 
-                    onChange={(event: any) => setNewTask(event.target.value)}
-                  />
-                )}
+                <Paragraph>{task.name}</Paragraph>
               </Box>
             ))}
           </Box>
@@ -71,29 +63,13 @@ export const Tasks = () => {
               <Box key={task.id} gap="medium" direction="row">
                 <CheckBox 
                   checked={task.done}
-                  onChange={(event: any) => { 
-                    setTasks(tasks.map(t => (t.id === task.id ? {...t, done: event.target.checked} : t))); 
-                  }}
+                  onChange={() => dispatch(toggleTask({ ...task, done: !task.done }))}
                 />
-                <Paragraph
-                  onClick={(event: any) => {
-                    setTasks(tasks.map(t => (t.id === task.id ? {...t, name: ""} : t)));
-                    setToggleButton(!toggleButton);
-                  }}
-                >
-                  {task.name}
-                </Paragraph>
+                <Paragraph>{task.name}</Paragraph>
               </Box>
             ))}
           </Box>
         </Box>
-        {/*<Box direction="row" gap="medium">
-          <Button
-            label="Add Async"
-            secondary
-            onClick={() => dispatch(incrementAsync(1))}
-          />
-          </Box>*/}
     </Box>
   );
 }
