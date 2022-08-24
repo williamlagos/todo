@@ -93,7 +93,7 @@ export const tasksSlice = createSlice({
       .addCase(toggleTask.fulfilled, (state, action) => {
         console.log(action)
         state.status = "idle";
-        // state.tasks = state.tasks.map(t => (t.id === action.payload.id ? {...t, done: action.payload.done} : t));
+        state.tasks = state.tasks.map(t => (t.id === action.payload.id ? {...t, done: action.payload.done} : t));
       })
       .addCase(toggleTask.rejected, (state) => {
         state.status = "failed";

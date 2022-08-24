@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextInput, Heading, CheckBox, Paragraph, Tag, Spinner } from "grommet";
+import { 
+  Box, 
+  Button, 
+  CheckBox,  
+  Heading, 
+  Paragraph,
+  Spinner, 
+  TextInput,
+  Tag, 
+} from "grommet";
 import { Checkmark, Add } from "grommet-icons";
 
 import { AppBar } from "../../components/AppBar";
@@ -54,7 +63,7 @@ export const Tasks = () => {
               </Box>
             )}
             {tasks.filter(task => !task.done).map((task: any) => (
-              <Box key={task.id} gap="medium" align="center" pad="small" direction="row">
+              <Box key={task.id} gap="medium" align="center" margin="small" pad="small" direction="row">
                 <CheckBox 
                   checked={task.done}
                   onChange={() => dispatch(toggleTask({ ...task, done: !task.done }))}
@@ -65,8 +74,9 @@ export const Tasks = () => {
           </Box>
           <Box justify="start" pad="small" flex="shrink">
             <Tag name="Completed" value="Tasks" />
+            <Box margin="small"></Box>
             {tasks.filter(task => task.done).map((task: any) => (
-              <Box key={task.id} gap="medium" direction="row">
+              <Box key={task.id} gap="medium" align="center" margin="small" pad="small" direction="row">
                 <CheckBox 
                   checked={task.done}
                   onChange={() => dispatch(toggleTask({ ...task, done: !task.done }))}

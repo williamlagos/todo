@@ -1,6 +1,5 @@
 import { Box, Grommet } from "grommet";
 
-// import { Counter } from "./features/counter/Counter";
 import { Tasks } from "./features/tasks/Tasks";
 
 const theme = {
